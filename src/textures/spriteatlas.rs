@@ -4,25 +4,37 @@ use sdl2::video::WindowContext;
 use sdl2::image::LoadTexture;
 use sdl2::rect::Rect;
 use std::cmp::Ordering;
+use crate::textures::screen::Screen;
+use crate::behaviour::object::object;
+
 const atlas_path:&'static str = "/home/argument/rust/Rogue-rust/Assets/sprites/atlas.png";
-const PIXELSIZE:u32 = 32;
-const GLOBALSCALE:u32 = 3;
+pub const PIXELSIZE:u32 = 32;
+pub const GLOBALSCALE:u32 = 3;
 
-const SPRITES:[sprite;2] = [sprite{name:"brick_tile2",offset:{offset{R1:(128,79,PIXELSIZE,PIXELSIZE,),R2:(0,0,PIXELSIZE*GLOBALSCALE,PIXELSIZE*GLOBALSCALE)}},scale:1,multiple:false},
-sprite{name:"brick_tile",offset:{offset{R1:(128,79,PIXELSIZE,PIXELSIZE,),R2:(0,0,PIXELSIZE*GLOBALSCALE,PIXELSIZE*GLOBALSCALE)}},scale:1,multiple:false}];
+pub const SPRITES:[sprite;1] = [sprite{name:"brick_tiles",offset:{offset{R1:(128,111,PIXELSIZE,PIXELSIZE,),R2:(0,0,PIXELSIZE*GLOBALSCALE,PIXELSIZE*GLOBALSCALE)}},scale:1,multiple:true,cuttype:Spritecut::ByPixelSize}];
 
-
+#[derive(Clone)]
 pub struct offset{
     pub R1:(i32,i32,u32,u32),
     pub R2:(i32,i32,u32,u32),
 }
 
+#[derive(Clone)]
 pub struct sprite{
     offset:offset,
     scale:i32,
     name:&'static str,
     multiple:bool,
+    cuttype:Spritecut,
 }
+
+#[derive(Clone)]
+enum Spritecut{
+    Null,
+    ByPixelSize,
+}
+
+
 
 
 pub fn load_atlas(texture_creator:&TextureCreator<WindowContext>) -> Texture{
@@ -35,17 +47,17 @@ pub fn load_atlas(texture_creator:&TextureCreator<WindowContext>) -> Texture{
 }
 
 
-pub fn draw_sprite(canvas:&mut WindowCanvas,atlas:&Texture){
-    let sprite = getsprite("brick_tile");
+pub fn draw_sprite(screen:&mut Screen,obj:&object){
+    let sprite = &obj.Sprite;
     let Rec1 = Rect::new(sprite.offset.R1.0,sprite.offset.R1.1,sprite.offset.R1.2,sprite.offset.R1.3);
-    let Rec2 = Rect::new(sprite.offset.R2.0,sprite.offset.R2.1,sprite.offset.R2.2,sprite.offset.R2.3);
+    let Rec2 = Rect::new(obj.Position.x as i32,obj.Position.y as i32,sprite.offset.R2.2,sprite.offset.R2.3);
 
-    canvas.copy(atlas,Rec1,Rec2).unwrap();
+    screen.canvas.copy(&screen.atlas,Rec1,Rec2).unwrap();
 }
 
-fn getsprite(name:&str) -> &sprite{
+pub fn getsprite(name:&str) -> Vec<&sprite>{
     let mut current_sprite:Option<&sprite> = None;
-
+    let mut sprites:Vec<&sprite> = Vec::new();
     for i in &SPRITES[0..SPRITES.len()]{
 
         if i.name.contains(name){
@@ -60,9 +72,12 @@ fn getsprite(name:&str) -> &sprite{
         Some(sp) => {let current_sprite = sp;
                 if current_sprite.multiple
                 {
-    
-                }   
-                current_sprite
+                         
+                }else{
+                    sprites.push(current_sprite);
+                }
+
+                sprites
             }
 
         }
