@@ -3,5 +3,9 @@ name = "Rogue-rust"
 version = "0.1.0"
 edition = "2024"
 
-[dependencies]
-sdl2 = "0.38.0"
+
+
+[dependencies.sdl2]
+version = "0.38.0"
+default-features = false
+features = ["ttf","image","gfx","mixer"]

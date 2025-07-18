@@ -1,5 +1,6 @@
 extern crate sdl2;
 mod textures;
+mod behaviour;
 mod game;
 mod Colors;
 use Colors::colors::sdl;
@@ -21,6 +22,7 @@ fn main() {
     canvas.present();
 
     let mut event_pump = sdl_context.event_pump().unwrap();
-    run(canvas, event_pump);
+    let texture_creator = canvas.texture_creator();
+    run(canvas, event_pump,texture_creator);
 
 }
