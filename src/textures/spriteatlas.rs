@@ -11,14 +11,14 @@ const atlas_path:&'static str = "/home/argument/rust/Rogue-rust/Assets/sprites/a
 pub const PIXELSIZE:u32 = 32;
 pub const GLOBALSCALE:u32 = 3;
 
-pub const SPRITES:[sprite;1] = [sprite{name:"brick_tiles",offset:{offset{R1:(128,111,PIXELSIZE,PIXELSIZE,),R2:(0,0,PIXELSIZE*GLOBALSCALE,PIXELSIZE*GLOBALSCALE)}},scale:1,multiple:true,cuttype:Spritecut::ByPixelSize}];
+pub const SPRITES:[sprite;1] = [sprite{name:"brick_tile",offset:{offset{R1:(128,48,64,64),R2:(0,0,PIXELSIZE*GLOBALSCALE,PIXELSIZE*GLOBALSCALE)}},scale:1,multiple:true,cuttype:Spritecut::ByPixelSize}];
 
 #[derive(Clone)]
 pub struct offset{
     pub R1:(i32,i32,u32,u32),
     pub R2:(i32,i32,u32,u32),
 }
-
+ 
 #[derive(Clone)]
 pub struct sprite{
     offset:offset,
@@ -55,27 +55,23 @@ pub fn draw_sprite(screen:&mut Screen,obj:&object){
     screen.canvas.copy(&screen.atlas,Rec1,Rec2).unwrap();
 }
 
-pub fn getsprite(name:&str) -> Vec<&sprite>{
+pub fn getsprite(sp_name:&str) -> Vec<&sprite>{
     let mut current_sprite:Option<&sprite> = None;
     let mut sprites:Vec<&sprite> = Vec::new();
     for i in &SPRITES[0..SPRITES.len()]{
 
-        if i.name.contains(name){
+        if i.name.contains(sp_name){
             current_sprite = i.into();
         }
-
     }
 
     
     match current_sprite{
         None => panic!("not a sprite"),
-        Some(sp) => {let current_sprite = sp;
-                if current_sprite.multiple
-                {
-                         
-                }else{
+        Some(sp) => {
+                let current_sprite = sp;
                     sprites.push(current_sprite);
-                }
+                
 
                 sprites
             }

@@ -1,7 +1,7 @@
 use crate::textures::spriteatlas::{sprite,getsprite,draw_sprite,SPRITES,PIXELSIZE,GLOBALSCALE};
 use crate::textures::screen::Screen;
 
-const ACTOBJBEFORERUN:[(&'static str,Pos,u32);1] = [("brick_tile",Pos{x:0.0,y:0.0},8)];
+const ACTOBJBEFORERUN:[(&'static str,Pos,u32);1] = [("brick_tile",Pos{x:0.0,y:1.0},1)];
 
 
 #[derive(Clone)]
@@ -32,6 +32,7 @@ impl object{
         
         for obj_descr in &ACTOBJBEFORERUN{
             let sprite = getsprite(obj_descr.0);
+            
             let mut sprite_index = 0;
 
             for tiles_times in 0..obj_descr.2{
